@@ -26,17 +26,21 @@ pipeline {
             }
         }
 
-        stage('Push to DockerHub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'DOCKER_USER', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    sh """
-                    echo "$PASS" | docker login -u "$USER" --password-stdin
-                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}
-                    docker push ${DOCKER_USER}/${IMAGE_NAME}:${IMAGE_TAG}
-                    """
-                }
-            }
+       stage('Push to DockerHub') {
+               steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'Docker_cred',   // ✅ EXACT MATCH
+            usernameVariable: 'DOCKER_USER',
+            passwordVariable: 'DOCKER_PASS'
+        )]) {
+            sh '''
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker tag hotstarimg:latest $DOCKER_USER/hotstarimg:latest
+            docker push $DOCKER_USER/hotstarimg:latest
+            '''
         }
+    }
+}
 
         stage('Deploy to Kubernetes') {
             steps {
