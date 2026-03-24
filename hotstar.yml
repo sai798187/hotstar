@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hotsatr-pod
+  labels:
+    app: hotel
+spec:
+  containers:
+    - name: hotstar-container
+      image: sai798187/hotstar:latest
+      ports:
+        - containerPort: 8080
