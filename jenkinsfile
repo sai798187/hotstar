@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_USER = "docker_cred"
+        DOCKERHUB_CREDENTIALS = "docker_cred"
         IMAGE_NAME = "hotstarimg"
         IMAGE_TAG = "latest"
     }
@@ -26,22 +26,17 @@ pipeline {
             }
         }
 
-       stage('Push to DockerHub') {
-               steps {
-        withCredentials([usernamePassword(
-            credentialsId: 'Docker_cred',   // ✅ EXACT MATCH
-            usernameVariable: 'DOCKER_USER',
-            passwordVariable: 'DOCKER_PASS'
-        )]) {
-            sh '''
-            docker login -u $DOCKER_USER -p $DOCKER_PASS
-            docker tag hotstarimg:latest $DOCKER_USER/hotstarimg:latest
-            docker push $DOCKER_USER/hotstarimg:latest
-            '''
+      stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: "${DOCKERHUB_CREDENTIALS}", usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        docker push ${IMAGE_NAME}:latest
+                        docker logout
+                    '''
+                }
+            }
         }
-    }
-}
-
         stage('Deploy to Kubernetes') {
             steps {
                 sh """
