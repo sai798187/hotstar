@@ -38,12 +38,14 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to Kubernetes') {
+        stage('K8s Deployment') {
             steps {
-                sh """
-                aws eks update-kubeconfig --region ap-southeast-2 --name cluster1
-                kubectl apply -f hotstar.yml
-                """
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh '''
+                    export KUBECONFIG=$KUBECONFIG
+                    kubectl get nodes
+                    kubectl apply -f hotstar.yml
+                    '''
             }
         }
     }
