@@ -40,9 +40,9 @@ pipeline {
         }
         stage('K8s Deployment') {
          steps {
-           aws eks update-kubeconfig --region ap-southeast-2 --name cluster1 
+            
                 sh '''
-                export KUBECONFIG=$KUBECONFIG
+                aws eks update-kubeconfig --region ap-southeast-2 --name cluster1
                 kubectl get nodes
                 kubectl apply -f hotstar.yml
                 kubectl apply -f hotstarservice.yml
