@@ -45,6 +45,7 @@ pipeline {
                 export KUBECONFIG=$KUBECONFIG
                 kubectl get nodes
                 kubectl apply -f hotstar.yml
+                kubectl apply -f hotstarservice.yml
                 '''
                 }
             }
