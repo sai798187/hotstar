@@ -13,7 +13,6 @@ pipeline {
             steps {
                 git branch: 'main', url: 'https://github.com/sai798187/hotstar.git'
             }
-        }
          post {
                 success {
                     emailext(
@@ -23,6 +22,7 @@ pipeline {
                     )
                 }
             }
+        }
         stage('creating-artifact') {
             steps {
                 sh 'mvn clean package'
