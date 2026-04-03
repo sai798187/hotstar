@@ -5,6 +5,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = "docker_cred"
         IMAGE_NAME = "hotstarimg"
         IMAGE_TAG = "latest"
+        SONARQUBE_ENV = "sq"
     }
 
     stages {
@@ -28,6 +29,27 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
+        stage('JENKINS TO NEXUS') {
+             steps {
+          withMaven(globalMavenSettingsConfig: 'settings.xml', jdk: 'jdk17', maven: 'maven1', traceability: true) {
+               sh 'mvn deploy'
+               }
+            }
+        }
+       stage('SonarQube Analysis') {
+               steps {
+                   withSonarQubeEnv("${SONARQUBE_ENV}") {
+                       sh 'mvn sonar:sonar'
+                   }
+               }
+         }
+       stage('Quality Gate') {
+               steps {
+                   timeout(time: 1, unit: 'MINUTES') {
+                       waitForQualityGate abortPipeline: true
+                   }
+               }
+           }
 
         stage('Build Image') {
             steps {
