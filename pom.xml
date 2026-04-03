@@ -6,7 +6,7 @@
     <groupId>in.reyaz</groupId>
     <artifactId>myapp</artifactId>
     <packaging>war</packaging>
-    <version>8.3.3-SNAPSHOT</version>
+    <version>8.3.3</version>
     <name>myapp</name>
     <url>http://maven.apache.org</url>
 
@@ -53,13 +53,13 @@
     <repository>
         <id>maven-releases</id>
         <name>Nexus Releases</name>
-        <url>http://43.204.108.96:8081/repository/maven-releases/</url>
+        <url>http://52.65.255.41:8081/repository/maven-releases/</url>
     </repository>
 
     <snapshotRepository>
         <id>maven-snapshots</id>
         <name>Nexus Snapshots</name>
-        <url>http://43.204.108.96:8081/repository/maven-snapshots/</url>
+        <url>http://52.65.255.41:8081/repository/maven-snapshots/</url>
     </snapshotRepository>
 </distributionManagement>
  
